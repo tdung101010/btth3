@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trò chơi kiểm tra độ nhạy</title>
+  <style>
+    
+    .block {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .block.square {
+      border-radius: 0;
+    }
+
+    .block.rectangle {
+      width: 150px;
+      height: 75px;
+    }
+
+    .block.triangle {
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 100px solid;
+    }
+
+     #game-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    div {
+      text-align: center;
+      font-family: Arial, Helvetica, sans-serif;
+      color: aliceblue;
+      font-size: 1.5rem;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);;
+    }
+
+    body {
+      background-image: url(https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg);
+          }
+  </style>
+</head>
+
+<body>
+  <div>
+    <h1>Kiểm tra độ nhạy của bạn!!!</h1>
+    <p>Hãy nhấn chuột vào các hình khối nhanh nhất có thể</p>
+    <p style="font-weight: bold;">Thời gian: <span id="timer"></span></p>
+    <p style="font-weight: bold;">Thời gian ngắn nhất: <span id="best-time"></span></p>
+  </div>
+
+  <div id="game-container"></div>
+  
+  <script>
+    var containerWidth, containerHeight;
+    var timerElement = document.getElementById('timer');
+
+  function getRandomPosition() {
+  var centerX = containerWidth / 2;
+  var centerY = containerHeight / 2;
+  var radius = 100; 
+
+  var angle = Math.random() * Math.PI * 2;
+  var distance = Math.random() * radius;
+  
+  var x = centerX + Math.cos(angle) * distance - 50; 
+  var y = centerY + Math.sin(angle) * distance - 50;
+
+  return { x: x, y: y };
+}
+
+    function generateRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function getRandomShape() {
+      var shapes = ['square', 'rectangle', 'triangle'];
+      var randomIndex = Math.floor(Math.random() * shapes.length);
+      return shapes[randomIndex];
+    }
+
+    function createBlock() {
+      var block = document.createElement('div');
+      block.className = 'block ' + getRandomShape();
+      block.style.backgroundColor = generateRandomColor();
+
+      var position = getRandomPosition();
+      block.style.left = position.x + 'px';
+      block.style.top = position.y + 'px';
+
+      block.addEventListener('click', handleBlockClick);
+      return block;
+    }
+
+    function handleBlockClick() {
+      var block = event.target;
+      var endTime = new Date();
+      var timeDiff = endTime - startTime;
+      timerElement.textContent = timeDiff + 'ms';
+
+      block.parentNode.removeChild(block);
+      gameContainer.appendChild(createBlock());
+      startTime = new Date();
+    }
+
+    var shortestTime = Infinity; 
+var bestTimeElement = document.getElementById('best-time'); 
+
+function handleBlockClick() {
+  var block = event.target;
+  var endTime = new Date();
+  var timeDiff = endTime - startTime;
+  timerElement.textContent = timeDiff + 'ms';
+
+  if (timeDiff < shortestTime) {
+    shortestTime = timeDiff;
+    bestTimeElement.textContent = shortestTime + 'ms';
+  }
+
+  var audio = new Audio('/BT_BUOI8/AUDIO/pop.mp3'); 
+  audio.play();
+
+  block.parentNode.removeChild(block);
+  gameContainer.appendChild(createBlock());
+  startTime = new Date();
+}
+
+    var gameContainer = document.getElementById('game-container');
+
+    var containerRect = gameContainer.getBoundingClientRect();
+    containerWidth = containerRect.width;
+    containerHeight = containerRect.height;
+
+    var startTime = new Date();
+    gameContainer.appendChild(createBlock());
+  </script>
+</body>
+</html>
